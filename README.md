@@ -7,6 +7,6 @@ O desafio principal consiste em evitar que o lixo seja levado pelo mar, incentiv
 
 # Desenvolvimento
 
-O projeto tem como foco a utilização da linguagem Python para todo o funcionamento do jogo, incluindo scripts próprios ou adaptados que auxiliam na exibição, organização e gerenciamento dos eventos presentes no projeto. Toda a ambientação, imagens e animações foram idealizadas e produzidas pela equipe, com o intuito de conferir uma perspectiva e personalidade próprias ao projeto, combinando elementos e mecânicas de jogo que proporcionem uma imersão mais completa ao jogador.
+O projeto tem como foco a utilização da linguagem Python para todo o funcionamento do jogo, incluindo scripts próprios ou adaptados que auxiliam na exibição, organização e gerenciamento dos eventos presentes no projeto. Toda a ambientação, imagens e animações foram idealizadas e produzidas pela equipe, com o intuito de conferir uma perspectiva e personalidade própria ao projeto, combinando elementos e mecânicas de jogo que proporcionem uma imersão mais completa ao jogador.
 
 Um dos pontos-chave do desenvolvimento é o algoritmo de mapeamento de região, batizado de VisionField, que permite aos NPCs do jogo terem comportamentos específicos e se movimentarem identificando colisões em tempo real.
