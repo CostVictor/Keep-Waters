@@ -44,6 +44,57 @@ class KeepWaters:
 
         # ~~ Game Over
 
+    # ~~~~~~~~~ Remover ~~~~~~~~
+        self.iniciar_teste = False
+        self.timer_desafio = self.clock.createTimer(manage=True)
+        self.timer_desafio.countdown(time=10.0, format=60)
+        self.timer_desafio.pause = True
+
+        self.timer_contador = self.clock.createTimer(manage=True)
+        self.time_surgimento = 4.0
+        self.timer_teste_pause = True
+
+        self.trocar_musica = True
+    
+    def reset(self):
+        pygame.mixer.music.load(musica_menu_inicial)
+        pygame.mixer.music.play(loops=-1)
+        self.trocar_musica = True
+
+        self.allTextMap = TextManager(proporcoes)
+        posFPS = (int(self.rect.right - 40 * proporcoes.x), int(self.rect.top + 20 * proporcoes.y))
+        self.fps = self.allTextMap.createText(str(int(self.time.get_fps())), 20, posFPS, (0, 0, 0))
+        self.allGroupsMap.remove(self.objPlayer.particulas.particulas)
+        self.player.add(Player(sprites_player, proporcoes, self.rect.center, self.allGroupsMap, self.allMessages, 'parado'))
+        self.objPlayer = self.player.sprite
+        self.objPlayer.loading(sprites_life, self.mouse, self.clock)
+        self.objPlayer.loadingInventory(sprites_inventory, sprites_hub)
+        self.objMapa.ref = self.objPlayer
+        self.allBoxInfo = BoxInfo(sprites_box, self.mouse, proporcoes)
+        self.allBoxInfo.createBoxSolid((self.rect.left+5, self.rect.top+5), reference='topleft')
+
+        self.pdp = Pdp(sprites_pdp, self.clock, self.allTextMap, proporcoes)
+        self.residuoMap.residuosMap.remove(self.residuoMap.residuosMap)
+        self.iniciar_teste = False
+
+        self.timer_desafio.restart()
+        self.timer_desafio.pause = True
+        self.timer_contador.restart()
+        self.timer_contador.pause = True
+    
+    def criar_caixa(self):
+        if not self.allBoxInfo.boxAnimation:
+            texto = self.allTextMap.createText('!', 17, (-30, -30))
+            iconeTeste = Icon(texto.image, texto.pos)
+            self.allBoxInfo.createBoxAnimation(iconeTeste, self.timer_desafio, audio=False)
+    
+    @staticmethod
+    def sortear_pos():
+        posX = random.randint(850, 1900)
+        posY = random.randint(2250, 3130)
+        return pygame.Vector2(posX, posY)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~
+
     def loading(self):
         self.menu_inicial.loading(list_bottom_keys)
         self.allBoxInfo.createBoxSolid((self.rect.left+5, self.rect.top+5), reference='topleft')
@@ -65,16 +116,8 @@ class KeepWaters:
         self.pause.loading(proporcoes, self.display, self.blur, self.textPause)
         self.pause.loadingButton(sprites_botao)
 
-        # ~~~~~~~~ Área de Testes fora da repetição ~~~~~~~~ #
-        self.menu_inicial.init = False
-        # self.timerTest = self.clock.createTimer()
-
-        self.ia = VisionField(self.objMapa, 500, 50, proporcoes)
-        self.ia.loadingGrid((1000, 2000))
-        self.teste = Bot((1000, 2300))
-        self.destFinal = (800, 1900)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        pygame.mixer.music.load(musica_menu_inicial)
+        pygame.mixer.music.play(loops=-1)
 
     def events(self):
         self.keyboard.evento = None
@@ -104,8 +147,42 @@ class KeepWaters:
             self.events()
 
             # ~~~~~~~~ Área de Testes na repetição ~~~~~~~~ #
-            if self.mouse.botaoL and self.keyboard.key(pygame.K_LSHIFT):
-                self.residuoMap.createResiduoAreia(self.mouse.image.posMap)
+            self.timer_contador.countdown(time=self.time_surgimento)
+            self.timer_desafio.countdown(self.timer_desafio.register)
+
+            if self.iniciar_teste:
+                if not self.timer_desafio.finished:
+                    if self.timer_contador.finished:
+                        self.residuoMap.createResiduoAreia(self.sortear_pos())
+                        self.timer_contador.restart()
+                        if 360 < int(self.timer_desafio.get_score(format_min_sec=False)) < 480 and self.timer_desafio != 2:
+                            self.time_surgimento = 3.5
+                            self.objPlayer.speed = 6 * proporcoes.x
+                        elif 240 < int(self.timer_desafio.get_score(format_min_sec=False)) < 360 and self.timer_desafio != 1.5:
+                            self.time_surgimento = 3.0
+                            self.objPlayer.speed = 8 * proporcoes.x
+                        elif 120 < int(self.timer_desafio.get_score(format_min_sec=False)) < 240 and self.timer_desafio != 1:
+                            self.time_surgimento = 2.5
+                            self.objPlayer.speed = 10 * proporcoes.x
+                else:
+                    if self.residuoMap.residuosMap:
+                        self.residuoMap.residuosMap.remove(self.residuoMap.residuosMap)
+                        for indice, slot in enumerate(self.objPlayer.objBag.slots):
+                            self.objPlayer.objBag.storage[indice] = 0
+                            slot.item.remove(slot.item)
+                            slot.reset()
+            else:
+                if not self.residuoMap.residuosMap:
+                    self.residuoMap.createResiduoAreia(self.sortear_pos())
+                if self.objPlayer.objBag.slots.sprites()[0].item:
+                    self.iniciar_teste = True
+                    self.timer_desafio.pause = False
+                    self.timer_contador.pause = False
+                    self.timer_teste_pause = False
+                    self.criar_caixa()
+
+            # if self.mouse.botaoL and self.keyboard.key(pygame.K_LSHIFT):
+            #     self.residuoMap.createResiduoAreia(self.mouse.image.posMap)
 
             # self.timerTest.countdown(10, format=60)
             # if self.keyboard.event(pygame.K_t):
@@ -139,20 +216,17 @@ class KeepWaters:
 
             # ~~ Jogo
             if not self.menu_inicial.init:
+                if self.trocar_musica:
+                    pygame.mixer.music.load(musica_jogo)
+                    pygame.mixer.music.play(loops=-1)
+                    self.trocar_musica = False
+
                 # ~~ Ativação do Pause
                 if not self.objPlayer.objBag.open:
                     if self.keyboard.event(pygame.K_ESCAPE):
                         if not self.pause.animation: self.pause.pausar()
 
                 if not self.pause.paused and not self.blur.active:
-                    # ~~~~~~~~~~~ #
-                    self.ia.fieldUpdate(self.player)
-                    if self.mouse.botaoR and self.keyboard.key(pygame.K_LSHIFT):
-                        self.destFinal = self.mouse.image.posMap.xy
-                    testePos = self.ia.createPath(self.teste.posCurrent, self.destFinal)
-                    self.teste.set_path(testePos)
-                    self.teste.move(self.delta)
-                    # ~~~~~~~~~~~ #
 
                     # ~~ Descarte
                     perimetroDescarte = self.lixeiras.descarte()
@@ -163,12 +237,6 @@ class KeepWaters:
 
                     # ~~ Atualizações
                     self.allGroupsMap.draw(self.display)
-
-                    # ~~~~~~~~~~~ #
-                    self.ia.draw_perim(self.display)
-                    self.ia.draw_path(self.display, self.teste, testePos)
-                    self.teste.draw(self.display, self.objMapa)
-                    # ~~~~~~~~~~~ #
 
                     self.mapa.update()
                     self.structures.update(self.keyboard)
@@ -192,10 +260,14 @@ class KeepWaters:
                 self.textPause.blit(self.display)
                 match self.pause.updateButton(self.delta, self.mouse):
                     case ('Continuar', True): self.pause.pausar()
+                    case ('Voltar ao menu', True): self.reset(); self.pause.pausar(); self.menu_inicial.init = True; self.timer_teste_pause = True
                     case ('Sair do jogo', True): self.init = False
             elif self.clock.pause:
                 self.clock.config_all_timers('despausar')
                 self.allMessages.clock.config_all_timers('despausar')
+                if self.timer_teste_pause:
+                    self.timer_desafio.pause = True
+                    self.timer_contador.pause = True
             pygame.display.update()
 
 keep_waters = KeepWaters()
