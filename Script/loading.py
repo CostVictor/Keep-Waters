@@ -41,6 +41,8 @@ sprites_botao = 'Data/Imagens/botoes'
 icone_life = 'Data/Imagens/icones/life'
 sprites_pause = 'Data/Imagens/interfaces/pause'
 sprites_struturas = 'Data/Imagens/interfaces/estrutura'
+musica_menu_inicial = 'Data\Audios\musicas_fundo\Musica_menu_inicial.wav'
+musica_jogo = 'Data\Audios\musicas_fundo\Musica_jogo_em_andamento.wav'
 
 # _____ Inicialização _____ #
 saves = Save()

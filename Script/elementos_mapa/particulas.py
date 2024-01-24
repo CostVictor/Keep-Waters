@@ -24,8 +24,7 @@ class Particulas:
         if self.timer_delay.finished:
             posicao = self.sortear_pos(ponto_referencia, alcance)
             match tipo:
-                case 'solo':
-                    Particula_solo(posicao, dimensao, cor, self.clock.createTimer(), self.particulas)
+                case 'solo': Particula_solo(posicao, dimensao, cor, self.clock.createTimer(), self.particulas)
                 case 'agua':
                     pass
             self.timer_delay.restart()

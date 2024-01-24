@@ -38,8 +38,7 @@ class Structures:
         colisaoPerimetro = pygame.sprite.spritecollide(self.mapa.ref, self.perimetros, False)
         verificacao = interactCollide(self.mapa.ref, colisaoPerimetro, dist=110)
         if verificacao:
-            if keyboard.event(pygame.K_e):
-                print('ok')
+            if keyboard.event(pygame.K_e):...
         
     class Structure(pygame.sprite.Sprite):
         def __init__(self, sprite, colision, acao, angle, posMap, *groups) -> None:

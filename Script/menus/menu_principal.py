@@ -41,6 +41,7 @@ class PrincipalInterface(Interface):
         match key:
             case 'Jogar', True:
                 self.init = False
+
             case 'Sair do jogo', True:
                 return False
             

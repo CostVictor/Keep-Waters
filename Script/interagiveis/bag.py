@@ -46,6 +46,9 @@ class Bag(Animacao):
         self.pockets.add(self.bolsol, self.bolsor)
         self.slots.exibir = False
         self.loadingSlot(0)
+        self.loadingSlot(1)
+        self.loadingSlot(2)
+        self.loadingSlot(3)
     
     def loadingSlot(self, levelLoad):
         def verificacao(tag):

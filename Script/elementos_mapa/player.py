@@ -13,7 +13,7 @@ class Player(Animacao):
         super().__init__(sprites, position, key_sprites, group)
         self.proporcoes = proporcoes
         self.velocidade = 0
-        self.speed = 10 * self.proporcoes.x
+        self.speed = 5 * self.proporcoes.x
         self.proportion_animation = 22 * self.proporcoes.x
         self.angle = 180
         self.colorPixel = None
@@ -27,7 +27,7 @@ class Player(Animacao):
         self.interaction = False
     
     def loading(self, sprites_life, mouse, clock):
-        self.posMap = pygame.Vector2(int(2500 * self.proporcoes.x), int(2500 * self.proporcoes.y))
+        self.posMap = pygame.Vector2(int(1500 * self.proporcoes.x), int(2500 * self.proporcoes.y))
         self.particulas = Particulas(clock, priority=1, priorityArray=self.priorityArray, proporcoes=self.proporcoes)
         self.life = Life(sprites_life, clock, self.proporcoes)
         self.mouse = mouse
