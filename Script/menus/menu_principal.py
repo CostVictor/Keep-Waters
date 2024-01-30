@@ -11,7 +11,7 @@ botao_interface = 'Data/Imagens/botoes/botao_interface/'
 audio = 'Data/Audios/sons_botao/interface/'
 
 class PrincipalInterface(Interface):
-    def __init__(self, map_list, size_block, ArrayGroup, proporcoes) -> None:
+    def __init__(self, map_list, size_block, ArrayGroup, proporcoes, group_panel_tutorial, group_panel_conquistas) -> None:
         super().__init__(map_list)
         self.init = True
         self.display = pygame.display.get_surface()
@@ -26,6 +26,9 @@ class PrincipalInterface(Interface):
         self.allGroup = ArrayGroup
         self.background = self.allGroup.createGroupSingle(priority=0)
         self.buttons = self.allGroup.createGroup(priority=5)
+
+        self.group_panel_tutorial = group_panel_tutorial
+        self.group_panel_conquistas = group_panel_conquistas
     
     def loading(self, list_of_objects: list[str]):
         self.background.add(self.Background(loadImage(menu_inicial, self.proporcoes, type='list', argumento=(1280, 720), 
@@ -38,12 +41,23 @@ class PrincipalInterface(Interface):
                                    key_sprites='botao_interface', text=key, textManager=self.allText, sizeText=30))
     
     def inputs(self, key):
-        match key:
-            case 'Jogar', True:
-                self.init = False
+        if not self.group_panel_conquistas.sprite.exibindo and not self.group_panel_tutorial.sprite.exibindo:
+            match key:
+                case 'Jogar', True:
+                    self.init = False
+                
+                case 'Tutorial', True:
+                    self.group_panel_tutorial.sprite.exibir(self.group_panel_tutorial)
+                    for button in self.buttons.sprites():
+                        button.reset()
 
-            case 'Sair do jogo', True:
-                return False
+                case 'Conquistas', True:
+                    self.group_panel_conquistas.sprite.exibir(self.group_panel_conquistas)
+                    for button in self.buttons.sprites():
+                        button.reset()
+
+                case 'Sair do jogo', True:
+                    return False
             
     def run(self, mouse, delta):
         if self.init:
@@ -51,7 +65,9 @@ class PrincipalInterface(Interface):
             self.allText.blit(self.display)
             
             self.background.update(delta)
-            self.buttons.update(self.display, delta, '_colide', mouse.botaoL)
+
+            if not self.group_panel_conquistas.sprite.exibindo and not self.group_panel_tutorial.sprite.exibindo:
+                self.buttons.update(self.display, delta, '_colide', mouse.botaoL)
 
     class Background(Animacao):
         def __init__(self, sprites, position: tuple[int, int], key_sprites="", *group) -> None:

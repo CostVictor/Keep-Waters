@@ -113,19 +113,21 @@ class TextManager:
             self.image.set_alpha(self.alpha)
             self.rect = self.image.get_rect(center=self.pos)
         
-        def set_color(self, new_color: tuple[int, int, int], delta=False, animation=False, speed=False):
-            if self.color != new_color:
-                if delta and animation:
-                    velocidade = speed * delta if speed else self.speed * delta
-                    r = self.modifyColor(self.color[0], new_color[0], velocidade)
-                    g = self.modifyColor(self.color[1], new_color[1], velocidade)
-                    b = self.modifyColor(self.color[2], new_color[2], velocidade)
-                    self.image = self.load.render(self.text, False, (int(r), int(g), int(b)))
-                    if int(r) == new_color[0] and int(g) == new_color[1] and int(b) == new_color[2]:
+        def set_color(self, new_color: tuple[int, int, int], trasicion=False, delta=False, animation=False, speed=False):
+            if trasicion:
+                if self.color != new_color:
+                    if delta and animation:
+                        velocidade = speed * delta if speed else self.speed * delta
+                        r = self.modifyColor(self.color[0], new_color[0], velocidade)
+                        g = self.modifyColor(self.color[1], new_color[1], velocidade)
+                        b = self.modifyColor(self.color[2], new_color[2], velocidade)
+                        self.image = self.load.render(self.text, False, (int(r), int(g), int(b)))
+                        if int(r) == new_color[0] and int(g) == new_color[1] and int(b) == new_color[2]:
+                            self.color = new_color
+                    else:
                         self.color = new_color
-                else:
-                    self.color = new_color
-                    self.image = self.load.render(self.text, False, self.color)
+                        self.image = self.load.render(self.text, False, self.color)
+            else: self.image = self.load.render(self.text, False, new_color)
 
         def enterAlpha(self, delta, speed=False):
             velocidade = speed * delta if speed else self.speed * delta

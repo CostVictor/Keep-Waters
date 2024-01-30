@@ -18,6 +18,9 @@ class Botao(Animacao):
         self.size_text = sizeText
         self.texto = self.textManager.createText(text, self.size_text, self.rect.center)
         if text: self.textManager.ajustsize(self)
+    
+    def set_pos_textButton(self, pos: tuple):
+        self.texto.rect.center = pos
 
     def execute(self, delta):
         velocidade = self.velocidade_padrao * delta

@@ -16,6 +16,7 @@ class KeepWaters:
         self.keyboard = Keyboard()
 
         # ~~ Gerenciadores
+        self.allgroupsPanel = PriorityArray()
         self.allGroupsMap = PriorityArray()
         self.allgroupPause = PriorityArray()
         self.allTextMap = TextManager(proporcoes)
@@ -28,7 +29,13 @@ class KeepWaters:
         self.blur = Blur(self.display)
         
         # ~~ Menu principal
-        self.menu_inicial = PrincipalInterface(interface, size_block=64, ArrayGroup=PriorityArray(), proporcoes=proporcoes)
+        self.group_panel_tutorial = self.allgroupsPanel.createGroupSingle(priority=0)
+        self.panel_tutorial = Panel(proporcoes, sprite_creditos[0], sprites_botao_panel, self.mouse, self.allgroupsPanel, self.display, self.group_panel_tutorial)
+        self.group_panel_conquistas = self.allgroupsPanel.createGroupSingle(priority=0)
+        self.panel_conquistas = PanelUpdate(proporcoes, sprite_creditos[0], sprites_botao_panel, self.mouse, self.allgroupsPanel, self.display, self.group_panel_conquistas)
+        self.group_panel_ajuda = self.allgroupsPanel.createGroupSingle(priority=0)
+        self.panel_ajuda = Panel(proporcoes, sprite_creditos[0], sprites_botao_panel, self.mouse, self.allgroupsPanel, self.display, self.group_panel_ajuda)
+        self.menu_inicial = PrincipalInterface(interface, 64, PriorityArray(), proporcoes, self.group_panel_tutorial, self.group_panel_conquistas)
         
         # ~~ Jogo
         posFPS = (int(self.rect.right - 40 * proporcoes.x), int(self.rect.top + 20 * proporcoes.y))
@@ -96,6 +103,15 @@ class KeepWaters:
     # ~~~~~~~~~~~~~~~~~~~~~~~~
 
     def loading(self):
+        self.panel_tutorial.load_imgs(sprite_creditos)
+        self.group_panel_tutorial.exibir = False
+
+        self.panel_conquistas.load_imgs(sprites_conquistas)
+        self.group_panel_conquistas.exibir = False
+
+        self.panel_ajuda.load_imgs(sprites_ajuda)
+        self.group_panel_ajuda.exibir = False
+
         self.menu_inicial.loading(list_bottom_keys)
         self.allBoxInfo.createBoxSolid((self.rect.left+5, self.rect.top+5), reference='topleft')
         self.lixeiras = Lixeiras(self.mapa, sprites_lixeira, self.allGroupsMap, proporcoes)
@@ -258,16 +274,24 @@ class KeepWaters:
                 self.allgroupPause.draw(self.display)
                 self.pause.update(self.delta)
                 self.textPause.blit(self.display)
-                match self.pause.updateButton(self.delta, self.mouse):
-                    case ('Continuar', True): self.pause.pausar()
-                    case ('Voltar ao menu', True): self.reset(); self.pause.pausar(); self.menu_inicial.init = True; self.timer_teste_pause = True
-                    case ('Sair do jogo', True): self.init = False
+                if not self.panel_ajuda.exibindo and not self.panel_conquistas.exibindo:
+                    match self.pause.updateButton(self.delta, self.mouse):
+                        case ('Continuar', True): self.pause.pausar()
+                        case ('Ajuda', True): self.panel_ajuda.exibir(self.group_panel_ajuda)
+                        case ('Conquistas', True): self.panel_conquistas.exibir(self.group_panel_conquistas)
+                        case ('Voltar ao menu', True): self.reset(); self.pause.pausar(); self.menu_inicial.init = True; self.timer_teste_pause = True
+                        case ('Sair do jogo', True): self.init = False
             elif self.clock.pause:
                 self.clock.config_all_timers('despausar')
                 self.allMessages.clock.config_all_timers('despausar')
                 if self.timer_teste_pause:
                     self.timer_desafio.pause = True
                     self.timer_contador.pause = True
+
+            self.allgroupsPanel.draw(self.display)
+            self.panel_tutorial.update(self.delta, self.group_panel_tutorial)
+            self.panel_conquistas.update(self.delta, self.group_panel_conquistas)
+            self.panel_ajuda.update(self.delta, self.group_panel_ajuda)
             pygame.display.update()
 
 keep_waters = KeepWaters()

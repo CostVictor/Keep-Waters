@@ -22,6 +22,7 @@ from Script.menus.pause import Pause
 from Script.gerenciadores.algorithm import VisionField
 from Script.elementos_mapa.structure import Structures
 from Script.gerenciadores.bot import Bot
+from Script.menus.painel_exibicao import Panel, PanelUpdate
 
 mouse = 'Data/Cursor.png'
 icon_video = 'Data/Imagens/botoes/botao_video'
@@ -41,8 +42,13 @@ sprites_botao = 'Data/Imagens/botoes'
 icone_life = 'Data/Imagens/icones/life'
 sprites_pause = 'Data/Imagens/interfaces/pause'
 sprites_struturas = 'Data/Imagens/interfaces/estrutura'
-musica_menu_inicial = 'Data\Audios\musicas_fundo\Musica_menu_inicial.wav'
-musica_jogo = 'Data\Audios\musicas_fundo\Musica_jogo_em_andamento.wav'
+sprite_creditos = 'Data/Imagens/interfaces/exibicao/creditos'
+sprites_tutorial = 'Data/Imagens/interfaces/exibicao/tutorial'
+sprites_conquistas = 'Data/Imagens/interfaces/exibicao/conquistas'
+sprites_ajuda = 'Data/Imagens/interfaces/exibicao/ajuda'
+sprites_botao_panel = 'Data/Imagens/botoes/botao_acao'
+musica_menu_inicial = 'Data/Audios/musicas_fundo/Musica_menu_inicial.wav'
+musica_jogo = 'Data/Audios/musicas_fundo/Musica_jogo_em_andamento.wav'
 
 # _____ Inicialização _____ #
 saves = Save()
@@ -66,6 +72,12 @@ icon_video = loadImage(icon_video, proporcoes)
 # video_logo = Video(video_logo, size=size_tela, pos=(0, 0))
 
 # _____ Menu Inicial _____ #
+
+sprite_creditos = loadImage(sprite_creditos, proporcoes, type='list', argumento=(900, 600), transform=pygame.transform.scale)
+sprites_conquistas = loadImage(sprites_conquistas, proporcoes, type='list', argumento=(900, 600), transform=pygame.transform.scale)
+sprites_tutorial = loadImage(sprites_tutorial, proporcoes, type='list', argumento=(900, 600), transform=pygame.transform.scale)
+sprites_ajuda = loadImage(sprites_ajuda, proporcoes, type='list', argumento=(900, 600), transform=pygame.transform.scale)
+sprites_botao_panel = loadImage(sprites_botao_panel, proporcoes, argumento=(36, 36), transform=pygame.transform.scale)
 
 # _____ Jogo _____ #
 
