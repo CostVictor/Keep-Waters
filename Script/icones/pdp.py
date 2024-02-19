@@ -4,7 +4,11 @@ import pygame
 
 class Pdp:
     def __init__(self, sprites, panel_conquistas, clock, textManager, allMessage, proporcoes) -> None:
+<<<<<<< HEAD
         self.__pdp = 0
+=======
+        self.__pdp = 1700
+>>>>>>> 612159cb81ee1859def5ac7aa89162f53af8b4c0
         self.display = pygame.display.get_surface()
         self.rectDisplay = self.display.get_rect()
         self.proporcoes = proporcoes
