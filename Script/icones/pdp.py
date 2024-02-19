@@ -4,7 +4,7 @@ import pygame
 
 class Pdp:
     def __init__(self, sprites, panel_conquistas, clock, textManager, allMessage, proporcoes) -> None:
-        self.__pdp = 190
+        self.__pdp = 1700
         self.display = pygame.display.get_surface()
         self.rectDisplay = self.display.get_rect()
         self.proporcoes = proporcoes
@@ -38,7 +38,9 @@ class Pdp:
         if check and check > self.panel_conquistas.qnt:
             for _ in range(abs(self.panel_conquistas.qnt - check)):
                 self.panel_conquistas.liberar_exibicao()
-            self.allMessage.createMessage('Conquista desb.')
+
+            if self.panel_conquistas.qnt < 18:
+                self.allMessage.createMessage('Conquista desb.')
     
     def perder_pdp(self, obj_ref, valor):
         self.setas.add(IconMoveinMap(self.sprites['perca'], obj_ref, self.proporcoes, self.clock.createTimer()))
