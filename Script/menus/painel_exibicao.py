@@ -112,6 +112,16 @@ class PanelUpdate(Panel):
     def __init__(self, proporcoes, sprite_null, sprites_button, mouse, priorityArray, display, *group) -> None:
         super().__init__(proporcoes, sprite_null, sprites_button, mouse, priorityArray, display, *group)
         self.__qnt_exibicao = 0
+    
+    
+    @property
+    def qnt(self):
+        return self.__qnt_exibicao
+
+
+    @qnt.setter
+    def qnt(self, value):
+        self.__qnt_exibicao = value
 
 
     def load_imgs(self, sprites_exibicao):
@@ -122,15 +132,15 @@ class PanelUpdate(Panel):
 
     def update_exibicao(self):
         if self.__qnt_exibicao:
-            if self.__qnt_exibicao > self.sprites_exibicao.size:
-                self.__qnt_exibicao = self.sprites_exibicao.size
+            if self.__qnt_exibicao > self.sprites_total.size:
+                self.__qnt_exibicao = self.sprites_total.size
 
-            self.sprites_exibicao = self.sprites_total[0:self.__qnt_exibicao]
+            self.sprites_exibicao = self.sprites_total[:self.__qnt_exibicao]
         else: self.sprites_exibicao = self.sprite_null
+        self.check_button()
 
 
     def liberar_exibicao(self, qnt=1):
         self.__qnt_exibicao += abs(qnt)
         self.update_exibicao()
-        self.check_button()
         

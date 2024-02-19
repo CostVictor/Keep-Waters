@@ -42,7 +42,7 @@ class KeepWaters:
         self.fps = self.allTextMap.createText(str(int(self.time.get_fps())), 20, posFPS, (0, 0, 0))
         self.player = self.allGroupsMap.createGroupSingle(priority=2)
         self.mapa = self.allGroupsMap.createGroupSingle(priority=0)
-        self.pdp = Pdp(sprites_pdp, self.clock, self.allTextMap, proporcoes)
+        self.pdp = Pdp(sprites_pdp, self.panel_conquistas, self.clock, self.allTextMap, self.allMessages, proporcoes)
         self.structures = Structures(sprites_struturas, self.mapa, self.allGroupsMap, proporcoes)
 
         # ~~ Pause
@@ -80,7 +80,7 @@ class KeepWaters:
         self.allBoxInfo = BoxInfo(sprites_box, self.mouse, proporcoes)
         self.allBoxInfo.createBoxSolid((self.rect.left+5, self.rect.top+5), reference='topleft')
 
-        self.pdp = Pdp(sprites_pdp, self.clock, self.allTextMap, proporcoes)
+        self.pdp = Pdp(sprites_pdp, self.panel_conquistas, self.clock, self.allTextMap, self.allMessages, proporcoes)
         self.residuoMap.residuosMap.remove(self.residuoMap.residuosMap)
         self.iniciar_teste = False
 
@@ -103,7 +103,7 @@ class KeepWaters:
     # ~~~~~~~~~~~~~~~~~~~~~~~~
 
     def loading(self):
-        self.panel_tutorial.load_imgs(sprite_creditos)
+        self.panel_tutorial.load_imgs(sprites_tutorial)
         self.group_panel_tutorial.exibir = False
 
         self.panel_conquistas.load_imgs(sprites_conquistas)

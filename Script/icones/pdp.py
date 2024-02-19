@@ -3,15 +3,17 @@ from Script.gerenciadores.groups import PriorityArray
 import pygame
 
 class Pdp:
-    def __init__(self, sprites, clock, textManager, proporcoes) -> None:
-        self.__pdp = 0
+    def __init__(self, sprites, panel_conquistas, clock, textManager, allMessage, proporcoes) -> None:
+        self.__pdp = 190
         self.display = pygame.display.get_surface()
         self.rectDisplay = self.display.get_rect()
         self.proporcoes = proporcoes
         self.sprites = sprites
         self.clock = clock
         self.allText = textManager
+        self.allMessage = allMessage
         self.allGroups = PriorityArray()
+        self.panel_conquistas = panel_conquistas
 
         posPDP = (self.rectDisplay.left + int(35 * self.proporcoes.x), self.rectDisplay.top + int(60 * self.proporcoes.y))
         self.image_pdp = self.allGroups.createGroupSingle(priority=0); self.image_pdp.add(
@@ -31,6 +33,12 @@ class Pdp:
         self.valores.add(IconMoveRect(texto.image, texto.pos, self.proporcoes, self.clock.createTimer()))
         self.__pdp += valor
         self.textPDP.set_text(str(self.__pdp))
+
+        check = int(self.__pdp / 100)
+        if check and check > self.panel_conquistas.qnt:
+            for _ in range(abs(self.panel_conquistas.qnt - check)):
+                self.panel_conquistas.liberar_exibicao()
+            self.allMessage.createMessage('Conquista desb.')
     
     def perder_pdp(self, obj_ref, valor):
         self.setas.add(IconMoveinMap(self.sprites['perca'], obj_ref, self.proporcoes, self.clock.createTimer()))
